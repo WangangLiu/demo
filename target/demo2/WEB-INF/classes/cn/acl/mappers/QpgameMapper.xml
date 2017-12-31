@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.acl.dao.QpgameMapper" >
+  <resultMap id="BaseResultMap" type="cn.acl.entity.Qpgame" >
+    <result column="KeyId" property="keyid" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="titleimg" property="titleimg" jdbcType="VARCHAR" />
+    <result column="gtime" property="gtime" jdbcType="VARCHAR" />
+    <result column="Starttime" property="starttime" jdbcType="VARCHAR" />
+    <result column="Endtime" property="endtime" jdbcType="VARCHAR" />
+    <result column="video" property="video" jdbcType="VARCHAR" />
+    <result column="videoImg" property="videoimg" jdbcType="VARCHAR" />
+  </resultMap>
+ 	<!-- 查询所有对象-升序排列 -->
+ 	<select id="select"   resultType="Qpgame">
+		SELECT * FROM Qpgame q order by q.gtime desc
+	</select>
+	
+	<!-- 根据ID查询对象 -->
+	<select id="getById" resultType="Qpgame" parameterType="Qpgame">
+		select * from Qpgame where keyid=#{keyid}
+	</select>
+	<!-- 添加对象 -->
+	<insert id="insert" parameterType="Qpgame">
+		insert into Qpgame
+		(title,titleimg,gcontent,hostunit,usetime,bonus,gtime,starttime)
+		values
+		(#{title},#{titleimg},#{gcontent},#{hostunit},#{usetime},#{bonus},#{gtime},#{starttime})
+	</insert>
+	<!-- 根据ID删除对象 -->
+	<delete id="delete" parameterType="Qpgame">
+		delete from Qpgame where
+		keyid=#{keyid }   <!-- keyid is null   适用于ID的值为空时使用 -->
+	</delete>
+	<!-- 根据ID修改对象 -->
+	<update id="update" parameterType="Qpgame">
+		update Qpgame set
+	 	title=#{title},titleimg=#{titleimg} gcontent=#{gcontent}
+	 	,hostunit=#{hostunit},usetime=#{usetime},bonus=#{bonus},gtime=#{gtime},starttime=#{starttime}
+		where keyid=#{keyid}
+	</update>
+	
+	
+</mapper>

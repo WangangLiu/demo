@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.acl.dao.QpcultureMapper" >
+	<!-- 绑定数据库与实体类字段 -->
+  <resultMap id="BaseResultMap" type="cn.acl.entity.Qpculture" >
+    <result column="KeyId" property="keyid" jdbcType="INTEGER" />
+    <result column="Title" property="title" jdbcType="VARCHAR" />
+    <result column="reportor" property="reportor" jdbcType="VARCHAR" />
+    <result column="publictime" property="publictime" jdbcType="VARCHAR" />
+    <result column="readnum" property="readnum" jdbcType="INTEGER" />
+  </resultMap>
+  
+  	<!-- 查询所有 -->
+  	<select id="select" parameterType="Integer" resultType="Qpculture">
+		SELECT * FROM QPCulture 
+	</select>
+  
+  
+  
+</mapper>

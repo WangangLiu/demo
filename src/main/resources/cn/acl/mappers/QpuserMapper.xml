@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.acl.dao.QpuserMapper" >
+  <resultMap id="BaseResultMap" type="cn.acl.entity.Qpuser" >
+    <result column="KeyId" property="keyid" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="IDname" property="idname" jdbcType="VARCHAR" />
+    <result column="IDCard" property="idcard" jdbcType="VARCHAR" />
+    <result column="Telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="Addres" property="addres" jdbcType="VARCHAR" />
+    <result column="utype" property="utype" jdbcType="INTEGER" />
+    <result column="uLevel" property="ulevel" jdbcType="INTEGER" />
+  </resultMap>
+ <select id="listQP1" resultType="Qpuser">
+		SELECT * FROM QPUser
+</select>
+
+<insert id="insertQP1" parameterType="Qpuser">
+	insert into QPUser 
+	(username,pwd,idname,idcard,telephone,addres,utype,ulevel)
+	values
+	(#{username},#{pwd},#{idname},#{idcard},#{telephone},#{addres},#{utype},#{ulevel})
+</insert>
+
+<delete id="deleteQP1" parameterType="Qpuser">
+	delete from QPUser where keyid=#{keyid}
+</delete>
+
+<update id="updateQP1" parameterType="Qpuser">
+	update QPUser set username=#{username},pwd=#{pwd},idname=#{idname},idcard=#{idcard}
+	,telephone=#{telephone},addres=#{addres},utype=#{utype},ulevel=#{ulevel} where keyid=#{keyid}
+</update>
+
+<select id="getById1" parameterType="integer" resultType="Qpuser">
+	SELECT * FROM QPUser where keyid=#{keyid}
+</select>
+</mapper>

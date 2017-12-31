@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.acl.dao.QpinformationMapper" >
+  <resultMap id="BaseResultMap" type="cn.acl.entity.Qpinformation" >
+    <result column="KeyId" property="keyid" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="QQ" property="qq" jdbcType="VARCHAR" />
+    <result column="Email" property="email" jdbcType="VARCHAR" />
+    <result column="weixin" property="weixin" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="map" property="map" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 查询所有对象 -->
+  <select id="select"  resultType="Qpinformation">
+		SELECT * FROM  Qpinformation q order by q.keyid
+	</select>
+	<!-- 根据ID查询对象 -->
+	<select id="getById" resultType="Qpinformation" parameterType="Qpinformation">
+		select * from Qpinformation where keyid=#{keyid}
+	</select>
+	<!-- 添加对象 -->
+	<insert id="insert" parameterType="Qpinformation">
+		insert into Qpinformation
+		(phone,qq,email,weixin,address,map)
+		values
+		(#{phone},#{qq},#{email},#{weixin},#{address},#{map})
+	</insert>
+	<!-- 根据ID删除对象 -->
+	<delete id="delete" parameterType="Qpinformation">
+		delete from Qpinformation where
+		keyid=#{keyid }   <!-- keyid is null   适用于ID的值为空时使用 -->
+	</delete>
+	<!-- 根据ID修改对象 -->
+	<update id="update" parameterType="Qpinformation">
+		update Qpinformation set
+		 phone=#{phone}, qq=#{qq},email=#{email},weixin=#{weixin},address=#{address},map=#{map}
+		where keyid=#{keyid}
+	</update>
+	
+</mapper>

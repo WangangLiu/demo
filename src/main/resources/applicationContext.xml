@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!--注解驱动  -->	
+	<context:annotation-config />
+	<!--组件扫描  -->
+	<context:component-scan base-package="cn.acl" />
+	<!--托管数据库连接配置文件  -->
+	<util:properties id="sql_server" location="classpath:jdbc.properties" />
+	<!--托管数据源  -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="#{sql_server.driver}" />
+		<property name="url" value="#{sql_server.url}" />
+		<property name="username" value="#{sql_server.username}" />
+		<property name="password" value="#{sql_server.password}" />
+	</bean>
+	
+	<!--托管会话工厂  -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="cn.acl.entity"></property>
+		<!-- 自动扫描mappers.xml文件 -->
+		<property name="mapperLocations" value="classpath:cn/acl/mappers/*.xml"></property>
+	</bean>
+	
+	<!--Dao扫描  -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="cn.acl.dao"></property>
+	</bean>
+
+	<!--事物管理  -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<!-- 自定义Realm -->
+	<bean id="myRealm" class="cn.acl.realm.MyRealm"/>
+
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm"/>
+	</bean>
+	
+
+	<!-- shiro过滤器 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- shiro的核心安全接口，这个属性是必须的 -->
+		<property name="securityManager" ref="securityManager"/>
+		<!-- 身份验证失败，跳转到登陆的页面 -->
+		<property name="loginUrl" value="/logins.jsp"/>
+		<!-- 权限验证失败，则跳转到指定的页面 -->
+		<property name="unauthorizedUrl" value="/unauthor.jsp"/>
+		<!-- shiroliain连接约束设置，即过滤的定义 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/login=anon
+				/admin/**=authc
+				/student=roles[admin]<!-- lwg可以访问，但成功没有设置跳转信息 -->
+				/teacher=perms["student:create"]<!-- pws可以访问，但成功没有设置跳转信息 -->
+			</value>
+		</property>
+	</bean>
+	
+	
+
+	<!-- 保证了shiro外部的lifecycle函数bean的执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+
+	<!-- 开启shiro的注解-->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean>
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"></property>
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<!-- 定义事物传播的属性 -->
+		<tx:attributes>
+			<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="edit*" propagation="REQUIRED"/>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="new*" propagation="REQUIRED"/>
+			<tx:method name="set*" propagation="REQUIRED"/>
+			<tx:method name="remove*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="change*" propagation="REQUIRED"/>
+			<tx:method name="check*" propagation="REQUIRED"/>
+			<tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="load*" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="*" propagation="REQUIRED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 配置事物的切面 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* cn.acl.services.*.*(..))" id="serviceOperation"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation"/>
+	</aop:config>
+
+</beans>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.acl.dao.QpdiscussMapper" >
+  <resultMap id="BaseResultMap" type="cn.acl.entity.Qpdiscuss" >
+    <result column="KeyId" property="keyid" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="dType" property="dtype" jdbcType="INTEGER" />
+    <result column="discussdate" property="discussdate" jdbcType="VARCHAR" />
+    <result column="readnum" property="readnum" jdbcType="INTEGER" />
+    <result column="Peopleid" property="peopleid" jdbcType="INTEGER" />
+  </resultMap>
+ 	<select id="select"   resultType="Qpdiscuss">
+		SELECT * FROM Qpdiscuss
+	</select>
+</mapper>

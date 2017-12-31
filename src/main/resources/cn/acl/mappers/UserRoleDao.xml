@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.acl.dao.IUserRoleDao" >
+  <resultMap id="RUResultMap" type="cn.acl.entity.t_role_user" >
+    <result column="userRoleId" property="userRoleId" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="roleId" property="roleId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  	<select id="getById" parameterType="Integer" resultType="t_role_user">
+		SELECT * FROM t_user_role where userId=#{userId}
+	</select>
+	
+	<insert id="addRU" parameterType="t_role_user">
+		insert into t_user_role values (#{userRoleId},#{userId},#{roleId})
+	</insert>
+	
+	<select id="countUR" resultType="Integer">
+		select count(1) from t_user_role
+	</select>
+	
+	<delete id="deleteById" parameterType="Integer">
+		delete from t_user_role where userId=#{userId}
+	</delete>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.acl.dao.QpnewsMapper" >
+  <resultMap id="BaseResultMap" type="cn.acl.entity.Qpnews" >
+    <result column="KeyId" property="keyid" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="ntime" property="ntime" jdbcType="VARCHAR" />
+    <result column="reportor" property="reportor" jdbcType="VARCHAR" />
+    <result column="readnum" property="readnum" jdbcType="INTEGER" />
+    <result column="Discussnum" property="discussnum" jdbcType="INTEGER" />
+  </resultMap>
+  <!-- 查询所有对象 -->
+  <select id="select" parameterType="Integer" resultType="Qpnews">
+		SELECT * FROM Qpnews  q order by q.ntime desc
+	</select>
+	<!-- 根据ID查询对象 -->
+	<select id="getFlowerById" resultType="Qpnews" parameterType="Qpnews">
+		select * from Qpnews where keyid=#{keyid}
+	</select>
+	<!-- 添加对象 -->
+	<insert id="insert" parameterType="Qpnews">
+		insert into Qpnews
+		(title,ntime,ncontent,img,reportor,readnum,discussnum)
+		values
+		(#{title},#{ntime},#{ncontent},#{img},#{reportor},#{readnum},#{discussnum})
+	</insert>
+	<!-- 根据ID删除对象 -->
+	<delete id="delete" parameterType="Qpnews">
+		delete from Qpnews where
+		keyid=#{keyid }   <!-- keyid is null   适用于ID的值为空时使用 -->
+	</delete>
+	<!-- 根据ID修改对象 -->
+	<update id="update" parameterType="Qpnews">
+		update Qpnews set
+		keyid=#{keyid},title=#{title},ntime=#{ntime},ncontent=#{ncontent} ,img=#{img},reportor=#{reportor},readnum=#{readnum},discussnum=#{discussnum}
+		where keyid=#{keyid}
+	</update>
+	
+	<select id="countRow" resultType="Integer">
+		select count(1) from Qpnews
+	</select>
+	
+	<!-- 分页查询语句 -->
+	<select id="fenye" parameterType="Pagebean" resultType="hashmap">
+		SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY keyid desc) AS rownum,
+		    q.*
+            from QPNews q
+            ) AS D
+            WHERE rownum BETWEEN (#{pageNo}-1)*#{pageSize}+1 AND #{pageNo}*#{pageSize} ORDER BY keyid desc
+	</select>
+	
+</mapper>

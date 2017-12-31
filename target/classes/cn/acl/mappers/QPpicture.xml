@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+	<mapper namespace="cn.acl.dao.IQPpictureDao">
+	
+	<select id="getById" parameterType="Integer" resultType="QPpicture">
+		SELECT * FROM QPpicture WHERE keyid=#{keyid}
+	</select>
+	
+	<select id="getList"  resultType="QPpicture">
+		SELECT * FROM QPpicture q  order by q.keyid
+	</select>
+	 
+	
+	<insert id="insert" parameterType="QPpicture">
+		insert into QPpicture
+		(ptype,picture)
+		values
+		(#{ptype},#{picture})
+	</insert>
+
+	<delete id="delete" parameterType="QPpicture">
+		delete from QPpicture where
+		keyid=#{keyid }   <!-- keyid is null   适用于ID的值为空时使用 -->
+	</delete>
+
+	<update id="update" parameterType="QPpicture">
+		update QPpicture set
+		ptype=#{ptype},ntime=#{picture} 
+		where keyid=#{keyid}
+	</update>
+	
+	
+</mapper>

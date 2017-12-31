@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.acl.dao.QppolicyMapper" >
+  <resultMap id="BaseResultMap" type="cn.acl.entity.Qppolicy" >
+    <result column="KeyId" property="keyid" jdbcType="INTEGER" />
+    <result column="Title" property="title" jdbcType="VARCHAR" />
+    <result column="publictime" property="publictime" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="select"   resultType="Qppolicy">
+		SELECT * FROM Qppolicy q order by q.publictime desc
+	</select>
+	
+	<select id="getFlowerById" resultType="Qppolicy" parameterType="Qppolicy">
+		select * from Qppolicy where keyid=#{keyid}
+	</select>
+	
+	<insert id="insert" parameterType="Qppolicy">
+		insert into Qppolicy
+		(title,publictime,pcontent)
+		values
+		(#{title},#{publictime},#{pcontent})
+	</insert>
+
+	<delete id="delete" parameterType="Qppolicy">
+		delete from Qppolicy where
+		keyid=#{keyid }   <!-- keyid is null   适用于ID的值为空时使用 -->
+	</delete>
+	<update id="update" parameterType="Qppolicy">
+		update Qppolicy set
+	 	title=#{title}, publictime=#{publictime},pcontent=#{pcontent}
+		where keyid=#{keyid}
+	</update>
+	
+	
+</mapper>
